@@ -10,8 +10,21 @@ class ExpensesApp extends StatelessWidget {
   const ExpensesApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: MyHomePage(),
+    final ThemeData tema = ThemeData();
+
+    return MaterialApp(
+      home: const MyHomePage(),
+      theme: tema.copyWith(
+        colorScheme: tema.colorScheme
+            .copyWith(primary: Colors.purple, secondary: Colors.amber),
+        textTheme: tema.textTheme.copyWith(
+          titleLarge: const TextStyle(
+              fontFamily: 'OpenSans',
+              fontSize: 18,
+              color: Colors.black,
+              fontWeight: FontWeight.bold),
+        ),
+      ),
     );
   }
 }
@@ -44,13 +57,17 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _trasactions.add(newTransaction);
     });
+
+    Navigator.of(context).pop();
   }
 
   _opentransactionFormModal(BuildContext context) {
     showModalBottomSheet(
         context: context,
         builder: (_) {
-          return TransactionForm(onSubmit: _addTransaction,);
+          return TransactionForm(
+            onSubmit: _addTransaction,
+          );
         });
   }
 
@@ -61,8 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: const Text('Despesas Pessoais'),
         actions: [
           IconButton(
-              onPressed: () =>
-                _opentransactionFormModal(context),
+              onPressed: () => _opentransactionFormModal(context),
               icon: const Icon(Icons.add))
         ],
       ),
@@ -83,9 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
-          onPressed: () =>
-            _opentransactionFormModal(context)
-          ),
+          onPressed: () => _opentransactionFormModal(context)),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
