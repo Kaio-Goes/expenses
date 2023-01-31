@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Chart extends StatelessWidget {
-  const Chart({super.key, this.recentTransaction});
+  const Chart({super.key, required this.recentTransaction});
 
-  final List<Transaction>? recentTransaction;
+  final List<Transaction> recentTransaction;
 
   List<Map<String, Object>> get groupedTransactions {
     return List.generate(7, (index) {
@@ -13,18 +13,15 @@ class Chart extends StatelessWidget {
 
       double totalSum = 0.0;
 
-      for(var i = 0; i< recentTransaction!.length; i++){
-        bool sameDay = recentTransaction![i].date.day == weekDay.day;
-        bool sameMonth = recentTransaction![i].date.month == weekDay.month;
-        bool sameYear = recentTransaction![i].date.year == weekDay.year;
+      for(var i = 0; i< recentTransaction.length; i++){
+        bool sameDay = recentTransaction[i].date.day == weekDay.day;
+        bool sameMonth = recentTransaction[i].date.month == weekDay.month;
+        bool sameYear = recentTransaction[i].date.year == weekDay.year;
 
         if(sameDay && sameMonth && sameYear){
-          totalSum += recentTransaction![i].value;
+          totalSum += recentTransaction[i].value;
         }
       }
-
-      print(DateFormat.E().format(weekDay)[0]);
-      print(totalSum);
 
       return {
         'day': DateFormat.E().format(weekDay)[0],
@@ -39,7 +36,9 @@ class Chart extends StatelessWidget {
       elevation: 6,
       margin: const EdgeInsets.all(20),
       child: Row(
-        children: [],
+        children: groupedTransactions.map((e){
+          return Text('${e['day']} : ${e['value']}');
+        }).toList(),
       ),
     );
   }
