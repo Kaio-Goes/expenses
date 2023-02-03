@@ -4,28 +4,28 @@ import 'package:intl/intl.dart';
 class TransactionForm extends StatefulWidget {
   const TransactionForm({super.key, this.onSubmit});
 
-  final void Function(String, double)? onSubmit;
+  final void Function(String, double, DateTime)? onSubmit;
 
   @override
   State<TransactionForm> createState() => _TransactionFormState();
 }
 
 class _TransactionFormState extends State<TransactionForm> {
-  DateTime? selectedDate;
+  DateTime? selectedDate = DateTime.now();
+  final titleController = TextEditingController();
+  final valueController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    final titleController = TextEditingController();
-    final valueController = TextEditingController();
-
     sumbmitForm() {
       final title = titleController.text;
       final value = double.tryParse(valueController.text) ?? 0.0;
 
-      if (title.isEmpty || value <= 0) {
+      if (title.isEmpty || value <= 0 || selectedDate == null) {
         return;
       }
 
-      widget.onSubmit!(title, value);
+      widget.onSubmit!(title, value, selectedDate!);
     }
 
     Future showsDatePicker() async {
@@ -76,7 +76,7 @@ class _TransactionFormState extends State<TransactionForm> {
                 child: Text(
                   selectedDate == null
                       ? 'Nenhuma data selecionada!'
-                      : 'Data selecionada: ${DateFormat('dd/MM/y').format(selectedDate!)}' ,
+                      : 'Data selecionada: ${DateFormat('dd/MM/y').format(selectedDate!)}',
                 ),
               ),
               TextButton(
