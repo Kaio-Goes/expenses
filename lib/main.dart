@@ -41,8 +41,9 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _trasactions = [];
 
   List<Transaction> get _recentTransactions {
-    return _trasactions.where((element){
-      return element.date.isAfter(DateTime.now().subtract(const Duration(days: 7)));
+    return _trasactions.where((element) {
+      return element.date
+          .isAfter(DateTime.now().subtract(const Duration(days: 7)));
     }).toList();
   }
 
@@ -61,9 +62,9 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.of(context).pop();
   }
 
-  _removeTransaction(String id){
+  _removeTransaction(String id) {
     setState(() {
-      _trasactions.removeWhere((element){
+      _trasactions.removeWhere((element) {
         return element.id == id;
       });
     });
@@ -81,21 +82,37 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Despesas Pessoais'),
-        actions: [
-          IconButton(
-              onPressed: () => _opentransactionFormModal(context),
-              icon: const Icon(Icons.add))
-        ],
+    final appBar = AppBar(
+      title: Text(
+        'Despesas Pessoais',
+        style: TextStyle(
+          fontSize: 20 * MediaQuery.of(context).textScaleFactor
+        ),
       ),
+      actions: [
+        IconButton(
+            onPressed: () => _opentransactionFormModal(context),
+            icon: const Icon(Icons.add))
+      ],
+    );
+    final availableHeight = MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top;
+
+    return Scaffold(
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Chart(recentTransaction: _recentTransactions),
-            TransactionList(transactions: _trasactions, onRemove: _removeTransaction),
+            SizedBox(
+                height: availableHeight * 0.3,
+                child: Chart(recentTransaction: _recentTransactions)),
+            SizedBox(
+              height: availableHeight * 0.7,
+              child: TransactionList(
+                  transactions: _trasactions, onRemove: _removeTransaction),
+            ),
           ],
         ),
       ),
