@@ -4,6 +4,7 @@ import 'package:expenses/components/transaction_form.dart';
 import 'package:expenses/components/transaction_list.dart';
 import 'package:expenses/models/transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 main() => runApp(const ExpensesApp());
 
@@ -11,6 +12,8 @@ class ExpensesApp extends StatelessWidget {
   const ExpensesApp({super.key});
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
     final ThemeData tema = ThemeData();
 
     return MaterialApp(
@@ -39,6 +42,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _trasactions = [];
+  bool _showChart = false;
 
   List<Transaction> get _recentTransactions {
     return _trasactions.where((element) {
@@ -82,17 +86,24 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isLandScape = MediaQuery.of(context).orientation == Orientation.landscape;
     final appBar = AppBar(
       title: Text(
         'Despesas Pessoais',
-        style: TextStyle(
-          fontSize: 20 * MediaQuery.of(context).textScaleFactor
-        ),
+        style: TextStyle(fontSize: 20 * MediaQuery.of(context).textScaleFactor),
       ),
       actions: [
+        if(isLandScape)
         IconButton(
-            onPressed: () => _opentransactionFormModal(context),
-            icon: const Icon(Icons.add))
+          onPressed: () {
+            setState(() {
+              _showChart = !_showChart;
+            });
+          },
+          icon: Icon(_showChart ? Icons.list : Icons.show_chart)),
+        IconButton(
+          onPressed: () => _opentransactionFormModal(context),
+          icon: const Icon(Icons.add)),
       ],
     );
     final availableHeight = MediaQuery.of(context).size.height -
@@ -105,14 +116,31 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-                height: availableHeight * 0.3,
-                child: Chart(recentTransaction: _recentTransactions)),
-            SizedBox(
-              height: availableHeight * 0.7,
-              child: TransactionList(
-                  transactions: _trasactions, onRemove: _removeTransaction),
-            ),
+            // if(isLandScape)
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     const Text('Exibir Gráfico'),
+            //     Switch(
+            //       value: _showChart,
+            //       onChanged: (value) {
+            //         setState(() {
+            //           _showChart = value;
+            //         });
+            //       },
+            //     ),
+            //   ],
+            // ),
+            if (_showChart || !isLandScape)
+              SizedBox(
+                  height: availableHeight * (isLandScape ? 0.7 : 0.3),
+                  child: Chart(recentTransaction: _recentTransactions)),
+            if (!_showChart || !isLandScape)
+              SizedBox(
+                height: availableHeight * 0.7,
+                child: TransactionList(
+                    transactions: _trasactions, onRemove: _removeTransaction),
+              ),
           ],
         ),
       ),

@@ -45,65 +45,72 @@ class _TransactionFormState extends State<TransactionForm> {
       });
     }
 
-    return Card(
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(children: [
-          TextField(
-            controller: titleController,
-            onSubmitted: (_) {
-              sumbmitForm();
-            },
-            decoration: const InputDecoration(
-              labelText: 'Título',
-            ),
-          ),
-          TextField(
-            controller: valueController,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            onSubmitted: (_) {
-              sumbmitForm();
-            },
-            decoration: const InputDecoration(
-              labelText: 'Valor (R\$)',
-            ),
-          ),
-          SizedBox(
-            height: 70,
-            child: Row(children: [
-              Expanded(
-                child: Text(
-                  selectedDate == null
-                      ? 'Nenhuma data selecionada!'
-                      : 'Data selecionada: ${DateFormat('dd/MM/y').format(selectedDate!)}',
-                ),
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Padding(
+          padding: EdgeInsets.only(
+              top: 10,
+              right: 10,
+              left: 10,
+              bottom: 10 + MediaQuery.of(context).viewInsets.bottom),
+          child: Column(children: [
+            TextField(
+              controller: titleController,
+              onSubmitted: (_) {
+                sumbmitForm();
+              },
+              decoration: const InputDecoration(
+                labelText: 'Título',
               ),
-              TextButton(
-                onPressed: () async {
-                  await showsDatePicker();
-                },
-                child: const Text(
-                  'Selecionar Data!',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              )
-            ]),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ElevatedButton(
-                child: const Text(
-                  'Nova Transação',
-                ),
-                onPressed: () {
-                  sumbmitForm();
-                },
+            ),
+            TextField(
+              controller: valueController,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              onSubmitted: (_) {
+                sumbmitForm();
+              },
+              decoration: const InputDecoration(
+                labelText: 'Valor (R\$)',
               ),
-            ],
-          )
-        ]),
+            ),
+            SizedBox(
+              height: 70,
+              child: Row(children: [
+                Expanded(
+                  child: Text(
+                    selectedDate == null
+                        ? 'Nenhuma data selecionada!'
+                        : 'Data selecionada: ${DateFormat('dd/MM/y').format(selectedDate!)}',
+                  ),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    await showsDatePicker();
+                  },
+                  child: const Text(
+                    'Selecionar Data!',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                )
+              ]),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  child: const Text(
+                    'Nova Transação',
+                  ),
+                  onPressed: () {
+                    sumbmitForm();
+                  },
+                ),
+              ],
+            )
+          ]),
+        ),
       ),
     );
   }
