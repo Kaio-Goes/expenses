@@ -1,4 +1,4 @@
-import 'package:expenses/components/adpatative_button.dart';
+import 'package:expenses/components/adptive_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
