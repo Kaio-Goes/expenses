@@ -1,4 +1,6 @@
 import 'package:expenses/components/adptive_button.dart';
+import 'package:expenses/components/adptive_datepicker.dart';
+import 'package:expenses/components/adptive_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -29,22 +31,6 @@ class _TransactionFormState extends State<TransactionForm> {
       widget.onSubmit!(title, value, selectedDate!);
     }
 
-    Future showsDatePicker() async {
-      return showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2023),
-        lastDate: DateTime.now(),
-      ).then((value) {
-        if (value == null) {
-          return;
-        }
-
-        setState(() {
-          selectedDate = value;
-        });
-      });
-    }
 
     return SingleChildScrollView(
       child: Card(
@@ -56,47 +42,25 @@ class _TransactionFormState extends State<TransactionForm> {
               left: 10,
               bottom: 10 + MediaQuery.of(context).viewInsets.bottom),
           child: Column(children: [
-            TextField(
-              controller: titleController,
-              onSubmitted: (_) {
-                sumbmitForm();
-              },
-              decoration: const InputDecoration(
-                labelText: 'Título',
-              ),
-            ),
-            TextField(
-              controller: valueController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              onSubmitted: (_) {
-                sumbmitForm();
-              },
-              decoration: const InputDecoration(
-                labelText: 'Valor (R\$)',
-              ),
-            ),
-            SizedBox(
-              height: 70,
-              child: Row(children: [
-                Expanded(
-                  child: Text(
-                    selectedDate == null
-                        ? 'Nenhuma data selecionada!'
-                        : 'Data selecionada: ${DateFormat('dd/MM/y').format(selectedDate!)}',
-                  ),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    await showsDatePicker();
-                  },
-                  child: const Text(
-                    'Selecionar Data!',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                )
-              ]),
-            ),
+            AdpativeTextField(
+                controller: titleController,
+                onSubmitted: (_) {
+                  sumbmitForm();
+                },
+                label: 'Título'),
+            AdpativeTextField(
+                controller: valueController,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                onSubmitted: (_) {
+                  sumbmitForm();
+                }, 
+                label: 'Valor (R\$)'),
+            AdptiveDatePicker(selectedDate: selectedDate!, onDateChanged: (newDate){
+              setState(() {
+                selectedDate =  newDate;
+              });
+            }),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
