@@ -2,7 +2,6 @@ import 'package:expenses/components/adptive_button.dart';
 import 'package:expenses/components/adptive_datepicker.dart';
 import 'package:expenses/components/adptive_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class TransactionForm extends StatefulWidget {
   const TransactionForm({super.key, this.onSubmit});
